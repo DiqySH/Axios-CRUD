@@ -1,20 +1,32 @@
 import "./App.css";
 import { useForm } from "react-hook-form";
-import useUser from "./hooks/useUser";
+import useUser from "./hooks/useGetUser";
+import useCreateUser from "./hooks/useCreateUser";
+import { MdEdit } from "react-icons/md";
+import useEditUser from "./hooks/useEditUser";
 
 interface User {
   name: string;
   username: string;
-  age: number;
+  age: string;
+  _id: string;
 }
 
 function App() {
   const { register, handleSubmit, reset } = useForm<User>();
-  const { createUser, data } = useUser();
+  const { data } = useUser();
+  const { createUser } = useCreateUser();
+  const { editUser } = useEditUser();
 
   const onSubmit = (data: User) => {
     createUser(data.name, data.username, data.age);
     reset();
+  };
+
+  const sahroni = {
+    name: "Sahroni",
+    username: "Sahroni",
+    age: "20",
   };
 
   return (
@@ -59,6 +71,15 @@ function App() {
               <p>Name: {user.name}</p>
               <p>Username: {user.username}</p>
               <p>Name: {user.age}</p>
+              <button
+                className="bg-yellow-400 w-fit"
+                onClick={() => {
+                  editUser(idx, sahroni);
+                }}
+              >
+                <MdEdit />
+                <span className="text-black">Edit jadi sahroni</span>
+              </button>
             </div>
           );
         })}
