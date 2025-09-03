@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import "./App.css";
-import axios from "axios";
-import { useForm, } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import useUser from "./hooks/useUser";
 
 interface User {
   name: string;
@@ -10,42 +9,13 @@ interface User {
 }
 
 function App() {
-  const [data, setData] = useState<User[]>([]);
-  const [error, setError] = useState<unknown>(null);
   const { register, handleSubmit, reset } = useForm<User>();
-
-  const getUser = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_API_KEY}/users`
-      );
-      setData(res.data);
-    } catch (err: unknown) {
-      setError(err);
-      console.log(error);
-    }
-  };
-
-  const createUser = async (name: string, username: string, age: number) => {
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_API_KEY}/users`,
-        { name: name, username: username, age: age }
-      );
-    } catch (err: unknown) {
-      setError(err);
-      console.log(error);
-    }
-  };
+  const { createUser, data } = useUser();
 
   const onSubmit = (data: User) => {
-    createUser(data.name, data.username, data.age)
-    reset()
+    createUser(data.name, data.username, data.age);
+    reset();
   };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   return (
     <main className="w-full min-h-screen bg-black">
